@@ -1,0 +1,58 @@
+syntax = "proto3";//声明protobuf的版本
+
+package dr526;//声明了代码所在的包（类似c++的namespace)
+
+//定义选项，表示生成service服务类和rpc方法描述，默认不生成
+option cc_generic_services = true;
+message resultCode
+{
+    int32 errCode = 1;
+    bytes errMsg = 2;
+}
+
+//定义登录请求消息类型
+message loginRequest
+{
+    bytes name = 1;//表明name是该消息的第一个字段，并且类型为protobuf的string
+    string pwd = 2;
+}
+
+//定义登录响应消息类型
+message loginResponse
+{
+    resultCode result=1;
+    bool success = 2;
+}
+
+//定义获取好友列表的请求类型
+message getFriendListsRequest
+{
+    uint32 userid = 1;
+}
+
+//定义用户信息
+message user
+{
+    bytes name = 1;
+    uint32 age = 2;
+    enum sex
+    {
+        male = 0;
+        female = 1;
+    }
+    sex sx = 3;
+}
+
+//定义获取好友列表的响应类型
+message getFriendListsResponse
+{
+    resultCode result = 1;
+    repeated user friendList = 2;//存储user列表
+}
+
+//在protobuf定义描述rpc方法的类型
+service userServiceRpc
+{
+    rpc login(loginRequest) returns(loginResponse);
+    rpc getFriendLists(getFriendListsRequest) returns(getFriendListsResponse);
+}
